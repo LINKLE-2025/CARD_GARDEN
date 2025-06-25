@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class SignupRequestDTO {
+public class UserUpdateInfoDTO {
 	private int user_id;
 	private String user_name;
 	private String user_password;
@@ -19,10 +19,8 @@ public class SignupRequestDTO {
 	private String nickname;
 	private String name;
 	private String gender;
-	private Date birth;
 	private String phone;
 	private String address;
 	private Date created_at;
-	private int point;
 	private String is_admin;
 }
