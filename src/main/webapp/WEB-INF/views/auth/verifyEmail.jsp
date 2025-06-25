@@ -8,15 +8,15 @@
 <link rel="stylesheet" href="${cpath}/resources/css/font-awesome.min.css">
 
 <head>
-    <title>카드가든 : 회원가입</title>
+    <title>카드가든 : ${title}</title>
 </head>
 
 <div class="bg-main">
   <div class="container">
     <div class="box">
-      <h2 class="title-lg">이메일 인증</h2>
+      <h2 class="title-lg">${title}</h2>
       
-      <form id="email-form" action="${cpath}/user/join/email" method="POST" autocomplete="off" style="width:100%;">
+      <form id="email-form" action="${cpath}/user/${actionLink}" method="POST" autocomplete="off" style="width:100%;">
         <div style="width:100%; margin-bottom:16px;">
           <label for="email" class="email-form-label">이메일 입력</label>
           <div class="email-input-row">
@@ -34,7 +34,7 @@
             </button>
           </div>
           <div id="email-msg" class="email-msg">
-            ・ 입력할 이메일로 인증번호가 발송됩니다.<br>・ 인증메일을 받을 수 있도록 자주 쓰는 이메일을 입력해 주세요.
+            ・ 입력한 이메일로 인증번호가 발송됩니다.<br>・ 인증메일을 받을 수 있도록 자주 쓰는 이메일을 입력해 주세요.
           </div>
         </div>
         
@@ -132,8 +132,14 @@
 </style>
 
 <script>
+  $(function() {
+	var msg = "${alertMsg}";
+    if(msg) { alert(msg); }
+  });
+
   // 중복체크 및 인증메일 요청
   $('#email-request-btn').on('click', function() {
+	const isJoin = ${isJoin};
     const email = $('#email').val().trim();
     if (!email) {
       $('#email-msg').css('color','#E44E37').text('・ 이메일을 입력하세요.');
@@ -148,8 +154,10 @@
       type: 'POST',
       data: {email: email},
       success: function(res) {
-        if(res.duplicate) {
-          $('#email-msg').css('color','#E44E37').text('・ 이미 사용 중인 이메일입니다.');
+    	if(isJoin && res.duplicate) {
+    	  $('#email-msg').css('color','#E44E37').text('・ 이미 사용 중인 이메일입니다.');
+    	} else if(!isJoin && !res.duplicate) {
+          $('#email-msg').css('color','#E44E37').text('・ 존재하지 않는 회원입니다.');
         } else {
           // 인증코드 발송
           $.ajax({
@@ -209,7 +217,7 @@
 
   // 상태 초기화
   function resetStatus() {
-    $('#email-msg').css('color','#999').html('・ 입력할 이메일로 인증번호가 발송됩니다.<br>・ 인증메일을 받을 수 있도록 자주 쓰는 이메일을 입력해 주세요.');
+    $('#email-msg').css('color','#999').html('・ 입력한 이메일로 인증번호가 발송됩니다.<br>・ 인증메일을 받을 수 있도록 자주 쓰는 이메일을 입력해 주세요.');
     $('#code-area').hide();
     $('#success-msg').hide();
     $('#next-btn').prop('disabled', true);
